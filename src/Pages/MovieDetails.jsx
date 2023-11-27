@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Link, Outlet, useLocation, useParams } from 'react-router-dom';
-import { fetchMovieDetails } from '../../api/api';
+import { fetchMovieDetails } from '../api/api';
 import ButtonBack from 'components/ButtonBack/ButtonBack';
 
+const defaultImg =
+  'https://ireland.apollo.olxcdn.com/v1/files/0iq0gb9ppip8-UA/image;s=1000x700';
+
 const MoviesDetails = () => {
-  const [moviesDetails, setMoviesDetails] = useState({});
+  const [moviesDetails, setMoviesDetails] = useState(null);
 
   const { movieId } = useParams();
   const location = useLocation();
@@ -13,6 +16,10 @@ const MoviesDetails = () => {
   useEffect(() => {
     fetchMovieDetails(movieId).then(setMoviesDetails);
   }, [movieId]);
+
+  if (!moviesDetails) {
+    return;
+  }
 
   const { poster_path, title, genres, overview, vote_average, release_date } =
     moviesDetails;
@@ -23,7 +30,11 @@ const MoviesDetails = () => {
       <div>
         <div>
           <img
-            src={`https://image.tmdb.org/t/p/w300${poster_path}`}
+            src={
+              poster_path
+                ? `https://image.tmdb.org/t/p/w300${poster_path}`
+                : defaultImg
+            }
             alt={title}
           />
         </div>
@@ -34,11 +45,11 @@ const MoviesDetails = () => {
             </h2>
           )}
 
-          <p>User Score: {vote_average && Math.floor(vote_average * 10)}%</p>
+          <p>User Score: {Math.floor(vote_average * 10)}%</p>
           <h2>Overview</h2>
           <p>{overview}</p>
           <h2>Genres</h2>
-          {genres && <p>{genres.map(({ name }) => name).join(', ')}</p>}
+          {<p>{genres.map(({ name }) => name).join(', ')}</p>}
         </div>
       </div>
 

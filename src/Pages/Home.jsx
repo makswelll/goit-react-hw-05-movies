@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-import { fetchTrendingMovies } from '../../api/api';
+import { fetchTrendingMovies } from '../api/api';
 
 import MoviesList from 'components/MoviesList/MoviesList';
 
